@@ -13,7 +13,7 @@ public abstract class PaintObject implements Serializable{
 	private int[] yPoints;
 	private Color color;
 
-	public PaintObject(int x1, int x2, int y1, int y2, Color color) {
+	public PaintObject(int x1, int y1, int x2, int y2, Color color) {
 		this.color = color;
 		xPoints = new int[] { x1, x2 };
 		yPoints = new int[] { y1, y2 };

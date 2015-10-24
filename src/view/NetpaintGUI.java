@@ -39,7 +39,7 @@ public class NetpaintGUI extends JFrame {
 		setSize(screensize);
 		objects = new ArrayList<PaintObject>();
 		
-		objects.add(new Rectangle(100, 100, 300, 300, Color.RED));
+		objects.add(new Rectangle(500, 600, 600, 750, Color.RED));
 		objects.add(new Image(50, 50, 200, 200, Color.BLACK));
 		objects.add(new Line(250, 250, 450, 450, Color.GREEN));
 		objects.add(new Line(250, 450, 450, 250, Color.GREEN));
@@ -69,8 +69,10 @@ public class NetpaintGUI extends JFrame {
 				g2.setColor(shape.getColor());
 				if (shape.isImage())
 					g2.drawImage(shape.getImage(), shape.getXPoints()[0], shape.getYPoints()[0], null);
-				else
+				else{
 					g2.draw(shape.getShape());
+					g2.fill(shape.getShape());
+				}
 			}
 		}
 	}
