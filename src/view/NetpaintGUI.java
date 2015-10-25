@@ -5,11 +5,16 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Shape;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JButton;
 import javax.swing.JColorChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -26,6 +31,14 @@ public class NetpaintGUI extends JFrame {
 	private List<PaintObject> objects;
 	private JScrollPane scpane;
 	private JPanel canvas;
+	private boolean clicked;
+	private JColorChooser chooser;
+	private JButton colorButton;
+	private JPanel controls;
+	private Color currColor;
+	private int xClicked;
+	private int yClicked;
+	private String shapeSelected;
 
 	public static void main(String[] args) {
 		NetpaintGUI window = new NetpaintGUI();
@@ -37,31 +50,42 @@ public class NetpaintGUI extends JFrame {
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		Dimension screensize = Toolkit.getDefaultToolkit().getScreenSize();
 		setSize(screensize);
+		currColor = Color.BLACK;
+		clicked = false;
+		shapeSelected = "RECTANGLE";
 		objects = new ArrayList<PaintObject>();
-		
-		objects.add(new Rectangle(500, 600, 600, 750, Color.RED));
-		objects.add(new Image(50, 50, 200, 200, Color.BLACK));
-		objects.add(new Line(250, 250, 450, 450, Color.GREEN));
-		objects.add(new Line(250, 450, 450, 250, Color.GREEN));
-		objects.add(new Oval(500, 250, 600, 350, Color.BLUE));
 		canvas = new CanvasPanel();
 		canvas.setPreferredSize(new Dimension(2048, 1024));
-		this.add(new JColorChooser(), BorderLayout.SOUTH);
 		scpane = new JScrollPane(canvas);
 		this.add(scpane, BorderLayout.CENTER);
+
+		controls = new JPanel();
+		controls.setLayout(null);
+		controls.setPreferredSize(new Dimension((int) screensize.getWidth(), 50));
+		chooser = new JColorChooser();
+		colorButton = new JButton("Color");
+		colorButton.addActionListener(new ColorButtonL());
+		colorButton.setSize(80, 20);
+		colorButton.setLocation(0, 0);
+		controls.add(colorButton);
+		this.add(controls, BorderLayout.SOUTH);
+
 	}
 
 	class CanvasPanel extends JPanel {
 		public CanvasPanel() {
 			this.setOpaque(true);
 			this.setBackground(Color.WHITE);
-			
+			MouseListenin ml = new MouseListenin();
+			this.addMouseListener(ml);
 		}
+
 		@Override
-        public void paintComponent(Graphics g) {
-            super.paintComponent(g);
-            drawShapesOnMe(g, objects);
+		public void paintComponent(Graphics g) {
+			super.paintComponent(g);
+			drawShapesOnMe(g, objects);
 		}
+
 		private void drawShapesOnMe(Graphics g, List<PaintObject> shapes) {
 			super.paintComponent(g);
 			Graphics2D g2 = (Graphics2D) g;
@@ -69,11 +93,98 @@ public class NetpaintGUI extends JFrame {
 				g2.setColor(shape.getColor());
 				if (shape.isImage())
 					g2.drawImage(shape.getImage(), shape.getXPoints()[0], shape.getYPoints()[0], null);
-				else{
+				else {
 					g2.draw(shape.getShape());
 					g2.fill(shape.getShape());
 				}
 			}
 		}
+	}
+
+	private class ColorButtonL implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// TODO Auto-generated method stub
+			currColor = JColorChooser.showDialog(null, "Choose a Color", chooser.getForeground());
+
+		}
+	}
+
+	private class MouseListenin implements MouseListener, MouseMotionListener {
+
+		@Override
+		public void mouseDragged(MouseEvent e) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void mouseMoved(MouseEvent e) {
+			if (clicked) {
+				PaintObject curr = new Line(xClicked, yClicked, e.getX(), e.getY(), currColor);
+				if (shapeSelected.equals("RECTANGLE"))
+					curr = new Rectangle(xClicked, yClicked, e.getX(), e.getY(), currColor);
+				else if (shapeSelected.equals("OVAL"))
+					curr = new Oval(xClicked, yClicked, e.getX(), e.getY(), currColor);
+				else if (shapeSelected.equals("IMAGE"))
+					curr = new Image(xClicked, yClicked, e.getX(), e.getY(), currColor);
+				objects.remove(objects.size() - 1);
+				objects.add(curr);
+				repaint();
+			}
+
+		}
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			clicked = !clicked;
+			if (clicked) {
+				xClicked = e.getX();
+				yClicked = e.getY();
+				PaintObject curr = new Line(xClicked, yClicked, e.getX(), e.getY(), currColor);
+				if (shapeSelected.equals("RECTANGLE"))
+					curr = new Rectangle(xClicked, yClicked, e.getX(), e.getY(), currColor);
+				else if (shapeSelected.equals("OVAL"))
+					curr = new Oval(xClicked, yClicked, e.getX(), e.getY(), currColor);
+				else if (shapeSelected.equals("IMAGE"))
+					curr = new Image(xClicked, yClicked, e.getX(), e.getY(), currColor);
+				objects.add(curr);
+				repaint();
+			} else {
+				objects.remove(objects.size() - 1);
+				PaintObject curr = new Line(xClicked, yClicked, e.getX(), e.getY(), currColor);
+				if (shapeSelected.equals("RECTANGLE"))
+					curr = new Rectangle(xClicked, yClicked, e.getX(), e.getY(), currColor);
+				else if (shapeSelected.equals("OVAL"))
+					curr = new Oval(xClicked, yClicked, e.getX(), e.getY(), currColor);
+				else if (shapeSelected.equals("IMAGE"))
+					curr = new Image(xClicked, yClicked, e.getX(), e.getY(), currColor);
+				objects.add(curr);
+				repaint();
+			}
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			// TODO Auto-generated method stub
+
+		}
+
 	}
 }
