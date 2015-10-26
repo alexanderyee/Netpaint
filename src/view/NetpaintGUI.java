@@ -14,10 +14,12 @@ import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 
 import model.Image;
@@ -39,7 +41,11 @@ public class NetpaintGUI extends JFrame {
 	private int xClicked;
 	private int yClicked;
 	private String shapeSelected;
-
+	private JRadioButton lineButton;
+	private JRadioButton ovalButton;
+	private JRadioButton rectangleButton;
+	private JRadioButton imageButton;
+	private ButtonGroup bGroup;
 	public static void main(String[] args) {
 		NetpaintGUI window = new NetpaintGUI();
 		window.setVisible(true);
@@ -67,11 +73,47 @@ public class NetpaintGUI extends JFrame {
 		colorButton.addActionListener(new ColorButtonL());
 		colorButton.setSize(80, 20);
 		colorButton.setLocation(0, 0);
+		lineButton = new JRadioButton("Line");
+		ovalButton = new JRadioButton("Oval");
+		rectangleButton = new JRadioButton("Rectangle");
+		imageButton = new JRadioButton("Image");
+		lineButton.setSize(80, 20);
+		ovalButton.setSize(80, 20);
+		rectangleButton.setSize(100, 20);
+		imageButton.setSize(80, 20);
+		lineButton.setLocation(50, 20);
+		ovalButton.setLocation(150, 20);
+		rectangleButton.setLocation(250, 20);
+		imageButton.setLocation(350, 20);
+		lineButton.setActionCommand("LINE");
+		ovalButton.setActionCommand("OVAL");
+		rectangleButton.setActionCommand("RECTANGLE");
+		imageButton.setActionCommand("IMAGE");
+		lineButton.addActionListener(new RadioListenin());
+		ovalButton.addActionListener(new RadioListenin());
+		rectangleButton.addActionListener(new RadioListenin());
+		imageButton.addActionListener(new RadioListenin());
+		bGroup = new ButtonGroup();
+		bGroup.add(lineButton);
+		bGroup.add(rectangleButton);
+		bGroup.add(ovalButton);
+		bGroup.add(imageButton);
 		controls.add(colorButton);
+		controls.add(lineButton);
+		controls.add(rectangleButton);
+		controls.add(ovalButton);
+		controls.add(imageButton);	
 		this.add(controls, BorderLayout.SOUTH);
-
 	}
+	private class RadioListenin implements ActionListener {
 
+		@Override
+		public void actionPerformed(ActionEvent e) {
+				shapeSelected = e.getActionCommand();
+			
+		}
+		
+	}
 	class CanvasPanel extends JPanel {
 		public CanvasPanel() {
 			this.setOpaque(true);
