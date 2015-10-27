@@ -2,6 +2,7 @@ package model;
 
 import java.awt.Color;
 import java.awt.Shape;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
@@ -31,7 +32,11 @@ public class Image extends PaintObject implements Serializable {
 	public java.awt.Image getImage() {
 		// TODO Auto-generated method stub
 		try {
-			return ImageIO.read(new File("./images/doge.jpeg"));
+			BufferedImage inputImage =  ImageIO.read(new File("./images/doge.jpeg"));	
+			BufferedImage outputImage = new BufferedImage(super.getXPoints()[1]-super.getXPoints()[0],
+					super.getYPoints()[1]-super.getYPoints()[0], inputImage.getType());
+			return outputImage;
+	       
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

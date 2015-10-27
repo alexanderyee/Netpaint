@@ -58,7 +58,7 @@ public class NetpaintGUI extends JFrame {
 		setSize(screensize);
 		currColor = Color.BLACK;
 		clicked = false;
-		shapeSelected = "RECTANGLE";
+		shapeSelected = "LINE";
 		objects = new ArrayList<PaintObject>();
 		canvas = new CanvasPanel();
 		canvas.setPreferredSize(new Dimension(2048, 1024));
@@ -89,6 +89,7 @@ public class NetpaintGUI extends JFrame {
 		ovalButton.setActionCommand("OVAL");
 		rectangleButton.setActionCommand("RECTANGLE");
 		imageButton.setActionCommand("IMAGE");
+		lineButton.setSelected(true);
 		lineButton.addActionListener(new RadioListenin());
 		ovalButton.addActionListener(new RadioListenin());
 		rectangleButton.addActionListener(new RadioListenin());
