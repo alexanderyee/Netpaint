@@ -46,6 +46,7 @@ public class NetpaintGUI extends JFrame {
 	private JRadioButton rectangleButton;
 	private JRadioButton imageButton;
 	private ButtonGroup bGroup;
+
 	public static void main(String[] args) {
 		NetpaintGUI window = new NetpaintGUI();
 		window.setVisible(true);
@@ -103,35 +104,39 @@ public class NetpaintGUI extends JFrame {
 		controls.add(lineButton);
 		controls.add(rectangleButton);
 		controls.add(ovalButton);
-		controls.add(imageButton);	
+		controls.add(imageButton);
 		this.add(controls, BorderLayout.SOUTH);
 	}
+
 	private class RadioListenin implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-				shapeSelected = e.getActionCommand();
-			
+			shapeSelected = e.getActionCommand();
 		}
-		
+
 	}
+
 	class CanvasPanel extends JPanel {
 		public CanvasPanel() {
 			this.setOpaque(true);
 			this.setBackground(Color.WHITE);
 			MouseListenin ml = new MouseListenin();
 			this.addMouseListener(ml);
+			this.addMouseMotionListener(ml);
 		}
 
 		@Override
 		public void paintComponent(Graphics g) {
 			super.paintComponent(g);
+			
 			drawShapesOnMe(g, objects);
 		}
 
 		private void drawShapesOnMe(Graphics g, List<PaintObject> shapes) {
-			super.paintComponent(g);
+			//super.paintComponent(g);
 			Graphics2D g2 = (Graphics2D) g;
+			
 			for (PaintObject shape : shapes) {
 				g2.setColor(shape.getColor());
 				if (shape.isImage())
@@ -158,7 +163,8 @@ public class NetpaintGUI extends JFrame {
 
 		@Override
 		public void mouseDragged(MouseEvent e) {
-			// TODO Auto-generated method stub
+			
+			
 
 		}
 
@@ -176,7 +182,6 @@ public class NetpaintGUI extends JFrame {
 				objects.add(curr);
 				repaint();
 			}
-
 		}
 
 		@Override
@@ -194,6 +199,7 @@ public class NetpaintGUI extends JFrame {
 					curr = new Image(xClicked, yClicked, e.getX(), e.getY(), currColor);
 				objects.add(curr);
 				repaint();
+			
 			} else {
 				objects.remove(objects.size() - 1);
 				PaintObject curr = new Line(xClicked, yClicked, e.getX(), e.getY(), currColor);
