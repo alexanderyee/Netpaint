@@ -14,7 +14,7 @@ public class Image extends PaintObject implements Serializable {
 
 	public Image(int x1, int x2, int y1, int y2, Color color) {
 		super(x1, x2, y1, y2, color);
-		
+
 	}
 
 	@Override
@@ -32,15 +32,18 @@ public class Image extends PaintObject implements Serializable {
 	public java.awt.Image getImage() {
 		// TODO Auto-generated method stub
 		try {
-			int newWidth = super.getXPoints()[1]-super.getXPoints()[0];
-			int newHeight = super.getYPoints()[1]-super.getYPoints()[0];
-			java.awt.Image inputImage =  ImageIO.read(new File("./images/doge.jpeg")).getScaledInstance(newWidth, newHeight, java.awt.Image.SCALE_DEFAULT);
-			return inputImage;
-	       
-		} catch (IOException e) {
+			int newWidth = super.getXPoints()[1] - super.getXPoints()[0];
+			int newHeight = super.getYPoints()[1] - super.getYPoints()[0];
 			
+				java.awt.Image inputImage = ImageIO.read(new File("./images/doge.jpeg")).getScaledInstance(newWidth,
+						newHeight, java.awt.Image.SCALE_DEFAULT);
+				return inputImage;
+			
+
+		} catch (IOException e) {
+
 		}
 		return null;
 	}
-	
+
 }

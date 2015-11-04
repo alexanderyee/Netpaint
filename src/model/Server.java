@@ -7,7 +7,9 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 
 // Alex Yee
@@ -56,28 +58,31 @@ class ClientHandler extends Thread {
 				Server.allPaintObjects = (Vector<PaintObject>) input.readObject();
 				writePaintObjects();
 			} catch (ClassNotFoundException | IOException e1) {
-				break;
+				try {
+					input.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
 			}
 		}
-		try {
-			input.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		
 	}
 
 	private void writePaintObjects() {
 		synchronized (clients) {
+			Set<ObjectOutputStream> closed = new HashSet<>();
 			for (ObjectOutputStream client : clients) {
 				try {
 					client.reset();
 					client.writeObject(Server.allPaintObjects);
 				} catch (IOException e) {
-					synchronized (clients) {
-						clients.remove(client);
-					}
+					
+					closed.add(client);
+					
 				}
-
+				clients.removeAll(closed);
 			}
 		}
 	}
