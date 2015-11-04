@@ -38,8 +38,7 @@ public class Image extends PaintObject implements Serializable {
 			return inputImage;
 	       
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			
 		}
 		return null;
 	}
