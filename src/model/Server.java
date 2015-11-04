@@ -67,17 +67,18 @@ class ClientHandler extends Thread {
 	}
 
 	private void writePaintObjects() {
-		for (ObjectOutputStream client : clients) {
-			try {
-				client.reset();
-				client.writeObject(Server.allPaintObjects);
-			} catch (IOException e) {
-				synchronized (clients) {
-					clients.remove(client);
+		synchronized (clients) {
+			for (ObjectOutputStream client : clients) {
+				try {
+					client.reset();
+					client.writeObject(Server.allPaintObjects);
+				} catch (IOException e) {
+					synchronized (clients) {
+						clients.remove(client);
+					}
 				}
+
 			}
-
 		}
-
 	}
 }
